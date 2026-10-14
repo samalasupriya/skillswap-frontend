@@ -8,15 +8,6 @@ import Sessions from "./pages/Sessions";
 import Reviews from "./pages/Reviews";
 import Profile from "./pages/Profile";
 
-const TABS = {
-  Skills: <Skills />,
-  Matches: <Matches />,
-  Requests: <Requests />,
-  Sessions: <Sessions />,
-  Reviews: <Reviews />,
-  Profile: <Profile />,
-};
-
 const ICONS = {
   Skills: "🛠️",
   Matches: "🤝",
@@ -47,7 +38,7 @@ function AuthShell({ children }) {
 }
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [loggedIn, setLoggedIn] = useState(() =>!!localStorage.getItem("token"));
   const [showRegister, setShowRegister] = useState(false);
   const [tab, setTab] = useState("Skills");
 
@@ -71,6 +62,18 @@ export default function App() {
 
   const name = localStorage.getItem("name") || "";
 
+  const renderTab = () => {
+    switch(tab) {
+      case "Skills": return <Skills />;
+      case "Matches": return <Matches />;
+      case "Requests": return <Requests />;
+      case "Sessions": return <Sessions />;
+      case "Reviews": return <Reviews />;
+      case "Profile": return <Profile />;
+      default: return <Skills />;
+    }
+  };
+
   return (
     <div className="app">
       <div className="topbar">
@@ -85,10 +88,10 @@ export default function App() {
       </div>
 
       <div className="tabs">
-        {Object.keys(TABS).map((t) => (
+        {Object.keys(ICONS).map((t) => (
           <button
             key={t}
-            className={tab === t ? "tab active" : "tab"}
+            className={tab === t? "tab active" : "tab"}
             onClick={() => setTab(t)}
           >
             {ICONS[t]} {t}
@@ -96,7 +99,7 @@ export default function App() {
         ))}
       </div>
 
-      <div className="panel">{TABS[tab]}</div>
+      <div className="panel">{renderTab()}</div>
     </div>
   );
 }
